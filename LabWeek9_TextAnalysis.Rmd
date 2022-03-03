@@ -1,0 +1,40 @@
+---
+title: "Lab Week 9 - Strings in stringr & other stuff"
+author: "Sophia Leiker"
+date: "3/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+We haven't done a ton of work with strings so far in 206 or 244. In this part, we'll learn a bit about how to deal with infamous **regular expressions** (*regex* or *regexp*) using nice functions in the `stringr` package (in the `tidyverse`) to make our lives easier.
+
+Want to learn more about working with regex *without* the `stringr` package functions? Read a nice introduction from Roger Peng [HERE](https://bookdown.org/rdpeng/rprogdatascience/regular-expressions.html).
+
+## Useful functions in `stringr`
+
+We'll do some work with the `starwars` dataset from `dplyr` (so if you have the `tidyverse`) attached, the dataset already exists. 
+
+Check it out by running `View(starwars)` in the Console. OK here we go. 
+
+### Detect a pattern
+
+Use `stringr::str_detect()` to detect a string pattern. 
+
+Let's see how it works first, then try it out for something that might be useful: 
+
+```{r}
+# Make a little vector
+vec <- c("  A Unicorn     Fish", " add   cornmeal ", "  French FRIES", " acorn squash  ")
+ 
+# Then detect a string pattern: 
+str_detect(vec, pattern = "corn")
+str_detect(vec, pattern = "fish")
+str_extract(vec, pattern = "[a-z]")
+str_extract(vec, pattern = "[a-z]+")
+str_extract_all(vec, pattern = "[a-zA-Z]+")
+```
+
