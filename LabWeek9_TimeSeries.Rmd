@@ -165,3 +165,70 @@ energy_forecast %>%
 energy_forecast %>% 
   autoplot(energy_ts)
 ```
+
+#### Assessing residuals
+
+We can use `broom::augment()` to append our original tsibble with what the model *predicts* the energy usage would be based on the model. Let's do a little exploring through visualization. 
+
+First, use `broom::augment()` to get the predicted values & residuals:
+
+```{r}
+# Append the predicted values (and residuals) to original energy data
+energy_predicted <- broom::augment(energy_fit)
+ 
+# Use View(energy_predicted) to see the resulting data frame
+
+#fitted is what the model predicted, the residual value is in the other columns
+```
+
+Now, plot the actual energy values (res_total), and the predicted values (stored as .fitted) atop them: 
+```{r}
+ggplot(data = energy_predicted) +
+  geom_line(aes(x = date, y = res_total)) +
+  geom_line(aes(x = date, y = .fitted), color = "red", alpha = .7)
+```
+
+Cool, those look like pretty good predictions! 
+
+Now let's explore the **residuals**. Remember, some important considerations: Residuals should be uncorrelated, centered at 0, and ideally normally distributed. One way we can check the distribution is with a histogram:
+
+```{r}
+ggplot(data = energy_predicted, aes(x = .resid)) +
+  geom_histogram()
+```
+
+We see that this looks relatively normally distributed, and centered at 0 (we could find summary statistics beyond this to further explore). 
+
+**This is the END of what you are expected to complete for Part 1 on time series exploration and forecasting.** Section E, below, shows how to use other forecasting models (seasonal naive and autoregressive integrated moving average, the latter which was not covered in ESM 244 this year).
+
+### E. Other forecasting methods (OPTIONAL SECTION - NOT REQUIRED)
+
+There are a number of other forecasting methods and models! You can learn more about ETS forecasting, seasonal naive (SNAIVE) and autoregressive integrated moving average (ARIMA) from Hyndman's book - those are the models that I show below.
+
+```{r}
+# Fit 3 different forecasting models (ETS, ARIMA, SNAIVE):
+energy_fit_multi <- energy_ts %>%
+  model(
+    ets = ETS(res_total ~ season("M")),
+    arima = ARIMA(res_total),
+    snaive = SNAIVE(res_total)
+  )
+ 
+# Forecast 3 years into the future (from data end date)
+multi_forecast <- energy_fit_multi %>% 
+  forecast(h = "3 years")
+ 
+# Plot the 3 forecasts
+multi_forecast %>% 
+  autoplot(energy_ts)
+ 
+# Or just view the forecasts (note the similarity across models):
+multi_forecast %>% 
+  autoplot()
+```
+
+We can see that all three of these models (exponential smoothing, seasonal naive, and ARIMA) yield similar forecasting results. 
+
+## End Part 1
+
+
