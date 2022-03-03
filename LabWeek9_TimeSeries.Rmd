@@ -1,0 +1,32 @@
+---
+title: "Lab Week 9 Time Series Continued"
+author: "Sophia Leiker"
+date: "3/3/2022"
+output: html_document
+---
+
+```{r setup, include=TRUE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(here)
+library(broom)
+ 
+# Time series packages
+library(tsibble)
+library(feasts)
+library(fable)
+```
+
+# Part 1: Time series wrangling & forecasting
+
+To reinforce skills for wrangling, visualizing, and forecasting with time series data, we will use data on US residential energy consumption from January 1973 - October 2017 (from the US Energy Information Administration). 
+
+- Dataset: U.S. Residential Energy Consumption (Jan 1973 - Oct 2017)
+- Units: Trillion BTU
+- Source: US Energy Information Administration (data.gov)
+
+Read in data and convert to a time series 
+```{r}
+energy <- read_csv(here("data", "energy.csv"))
+```
+
